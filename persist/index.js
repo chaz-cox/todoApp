@@ -9,17 +9,17 @@ function makeid(length) {
                        charactersLength));
                }
        return result;
-}
+};
 
 const addTodo = function(todo){
     id = makeid(8);
     todo.id = id;
-    todo_db[todo.id] = todo;
+    todo_db[id] = todo;
     console.log(todo_db);
     return todo;
 };
 
-const getTodo = function(todo){
+const getTodo = function(id){
    return todo_db[id]; 
 };
 

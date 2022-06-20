@@ -24,9 +24,10 @@ app.get("/todos", (req, res) => {
     res.json(persist.getTodos());
 });
 
-app.post("/todo/:id", (req, res) => {
+app.post("/todo", (req, res) => {
     console.log(req.params);
-    const todo = persist.addTodo(req.params);
+    const valTodo = setupTodo(req.body); 
+    const todo = persist.addTodo(valTodo);
     res.json(todo);
 });
 
@@ -39,18 +40,36 @@ app.delete("/todo/:id", (req, res) => {
 
 app.put("/todo/:id", (req, res) => {
     const id = req.params.id;
-    const todoData = req.body;
-    const todo = setTodo(id , todoData);
+    const valTodo = setupTodo(req.body);
+    const todo = persist.setTodo(id , valTodo);
     res.json(todo);
     console.log(todo);
 });
 
 app.patch("/todo/:id", (req, res) => {
-    ///
-    res.send("todo patch");
+    const id = req.params.id;
+    const todoData = req.body;
+    const todo = persist.patchTodo(id, todoData);
+    res.json(todo);
 });
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
+setupTodo = function(todoData) {
+    let deadline = new Date();
+    let done = false;
+    if (todoData.deadline){
+        deadline = new Date(todoData.deadline);
+    }
+    if (todoData.done){
+        done = todoData.done;
+    }
+    return {
+        name : todoData.name || "",
+        description : todoData.description || "",
+        done : done,
+        deadline : deadline,
+    };
+};
